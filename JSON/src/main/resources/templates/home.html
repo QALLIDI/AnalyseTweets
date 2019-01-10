@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<!-- Bootstrap CSS -->
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+	integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
+	crossorigin="anonymous">
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
+<meta charset="utf-8">
+<title th:text=${title}></title>
+</head>
+<body>
+	<nav class="navbar navbar-expand-lg navbar-light bg-primary">
+		<a class="navbar-brand text-white" href="#" th:text=${title}></a>
+	</nav>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col">
+				<br />
+				<ul class="list-group">
+					<li class="list-group-item active">Entreprise : <span class="badge badge-light" th:text=${entreprise.getEntreprise()}></span></li>
+				</ul>
+				<br />
+				<form th:action="@{entreprise}" method="GET">
+					<div class="form-group" th:object="${entreprises}">
+						<select class="form-control" name="id">
+							<option th:each="e : ${entreprises}" th:value="${e.getId()}"
+								th:text=${e.getEntreprise()} />
+						</select>
+					</div>
+					<button type="submit" class="btn btn-primary">Products
+						List</button>
+				</form>
+			</div>
+			<div class="col-6">
+				<br />
+				<ul class="list-group">
+					<li class="list-group-item active">Product : <span class="badge badge-light" th:text=${produit.getProduct()}></span></li>
+				</ul>
+				<br />
+				<form th:action="@{produit}" method="GET">
+					<div class="form-group" th:object="${produits}">
+						<select class="form-control" name="id">
+							<option th:each="p : ${produits}" th:value="${p.getId()}"
+								th:text=${p.getProduct()} />
+						</select>
+					</div>
+					<button type="submit" class="btn btn-success">The Most Negatif Tweet</button>
+				</form>
+			</div>
+			<div class="col">
+				<br />
+				<div class="card text-white bg-danger mb-3" style="width: 18rem;">
+					<div class="card-header"><span class="badge badge-light">The Most Negatif Tweet/Product</span></div>
+					<div class="card-body">
+						<p class="card-text" th:text=${tweet.content}></p>
+					</div>
+					<div class="card-footer">
+						Date : <span class="badge badge-light" th:text=${tweet.created_at}></span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col">
+				<br />
+				<canvas id="myDoughnut" width="200" height="200"></canvas>
+				<br />
+			</div>
+			<div class="col-6">
+				<br />
+				<canvas id="myChart" width="500" height="300"></canvas>
+				<br />
+			</div>
+			<div class="col" th:object="${comments}" style="width: 18rem;">
+				<br />
+				<ul class="list-group">
+					<li class="list-group-item active">10 First Comments</li>
+				</ul>
+				<br />
+				<!-- <ul class="list-group">
+					<li class="list-group-item" th:each="c : ${comments}"
+						th:text=${c.getContent()}></li>
+				</ul> -->
+				<br />
+			</div>
+		</div>
+	</div>
+	<!-- Optional JavaScript -->
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+	var map = /*[[${MapTweets}]]*/;
+	console.log(map);
+	console.log(Object.keys(map));
+	console.log(Object.values(map));
+	var keys = Object.keys(map);
+	var values = Object.values(map);
+		var ctx = document.getElementById("myChart");
+		var myChart = new Chart(ctx, {
+			type : 'bar',
+			data : {
+				labels : keys,
+				datasets : [ {
+					label : 'nombre de Tweet / jour',
+					data : values,
+					backgroundColor : [ 'rgba(255, 99, 132, 0.2)',
+							'rgba(54, 162, 235, 0.2)',
+							'rgba(255, 206, 86, 0.2)',
+							'rgba(75, 192, 192, 0.2)',
+							'rgba(153, 102, 255, 0.2)',
+							'rgba(255, 159, 64, 0.2)',
+							'rgba(255, 199, 132, 0.2)',
+							'rgba(54, 150, 235, 0.2)',
+							'rgba(255, 216, 86, 0.2)',
+							'rgba(85, 174, 192, 0.2)',
+							'rgba(189, 102, 255, 0.2)',
+							'rgba(255, 89, 55, 0.2)' ],
+					borderColor : [ 'rgba(255,99,132,1)',
+							'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)',
+							'rgba(75, 192, 192, 1)', 'rgba(153, 102, 255, 1)',
+							'rgba(255, 159, 64, 1)', 'rgba(255,99,132,1)',
+							'rgba(54, 144, 235, 1)', 'rgba(255, 106, 86, 1)',
+							'rgba(75, 89, 121, 1)', 'rgba(153, 107, 255, 1)',
+							'rgba(255, 138, 64, 1)' ],
+					borderWidth : 1
+				} ]
+			},
+			options : {
+				scales : {
+					yAxes : [ {
+						ticks : {
+							beginAtZero : true
+						}
+					} ]
+				}
+			}
+		});
+		   /*]]>*/
+	</script>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		var ctx = document.getElementById("myDoughnut");
+		// And for a doughnut chart
+		var myDoughnutChart = new Chart(ctx, {
+			type : 'doughnut',
+			data : {
+				datasets : [ {
+					fill : true,
+					backgroundColor : [ '#fce435', '#35c6fc' ],
+					data : [ /*[[${likes}]]*/0, /*[[${dislikes}]]*/0 ]
+				} ],
+				labels : [ 'Like', 'Dislike' ],
+				borderWidth : 1
+			}
+		});
+		   /*]]>*/
+	</script>
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+		integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+		integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+		crossorigin="anonymous"></script>
+</body>
+</html>
